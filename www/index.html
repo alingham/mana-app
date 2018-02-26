@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https: http://www.arakura.school.nz/* ; style-src data: 'self' http: https: 'unsafe-inline'; media-src *; object-src 'none';" />
+	
+ 	<link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+    <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsen-css-components.min.css">
+ 	
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    
+    <title>MANA - Arakura School</title>
+ 
+</head>
+
+<body>
+	 <div id="wrapper">
+	<ons-page>
+	    <ons-toolbar>
+	    <ons-toolbar-button onclick="fn.open()">
+			<ons-icon icon="ion-navicon, material:md-menu"></ons-icon>       
+		</ons-toolbar-button>
+    	<p class="center">Arakura School</p>
+   		</ons-toolbar>
+   		<ons-splitter class="splitter">
+  			<ons-splitter-side id="menu" side="left" width="220px" collapse swipeable>
+   		 <ons-page>
+      		<ons-list>
+        		<ons-list-item onclick="fn.load('home.html')" tappable>Home</ons-list-item>
+        		<ons-list-item onclick="fn.load('matrix.html')" tappable>Matrix</ons-list-item>
+        		<ons-list-item onclick="fn.load('about.html')" tappable>About</ons-list-item>
+      		</ons-list>
+    	 </ons-page>
+  		</ons-splitter-side>
+  		
+  		<ons-splitter-content id="content" page="home.html">
+  		</ons-splitter-content>
+  	</ons-splitter>
+   	</ons-page>
+	</div>	
+		
+<template id="home.html">
+  <ons-page>
+  <img src="img/logo.png" class="align-center" width="100%" alt="MANA" />
+  <div class="page-content">
+
+          <div class="searchbar">
+          	<ons-search-input class="search" placeholder="Search" onchange="search(this)"></ons-search-input>
+  		  </div>
+  		  
+  		  <h3>Explore Matrix</h3>
+  		  <div class="matrix-filter">
+  		  	<ons-select id="choose-value" modifier="material"><!--onchange="Values(event)"-->
+    			<option value="">Any Value</option>
+    			<option value="M">Make Positive Choices</option>
+    			<option value="A1">Act with Respect</option>
+    			<option value="N">Never Give up Attitude</option>
+    			<option value="A2">Always show Empathy</option>
+  			</ons-select>
+  			<ons-select id="choose-setting" modifier="material"><!--onchange="Setting(event)"-->
+  				<option value="">Any Setting</option>
+    			<option value="All Settings">All Settings</option>	
+  				<option value="Classrooms">Classrooms</option>
+  				<option value="Library">Library</option>
+  				<option value="Assembly">Assembly</option>
+  				<option value="Playground">Playground</option>
+  				<option value="Toilets">Toilets</option>
+  				<option value="Office">Office</option>
+  				<option value="Gate">Gate</option>
+  				<option value="Sports Trip">Sports Trip</option>
+  				<option value="School Trip">School Trip</option>
+  			</ons-select>
+  			<ons-button class="button center" style="width:120px;" onclick="vs(event)">Explore</ons-button>
+  		  </div>
+  
+  <div id="searchresults"></div>
+  <ons-progress-circular indeterminate id="progress" class="hidden"></ons-progress-circular>
+<ul id="results" class="update">
+	
+  		
+</ul>
+  		  
+  </div>
+  
+  
+  
+  </ons-page>
+</template>
+
+<template id="matrix.html">
+  <ons-page id="expmatrix">
+  <img src="img/logo.png" class="align-center" width="100%" alt="MANA" />
+  <div class="page-content">
+  	   <h1>Expectation Matrix</h1>
+  	   <ons-button onclick="inAppBrowser('https://docs.google.com/document/d/1BEz0qxnck0d5nnFNGw0rsP9taZ2W5IOlUf4Qg10avCg/'); return false;" modifier="large--quiet">Expectation Matrix (Google Doc)</ons-button>
+  	   <script>
+		document.addEventListener('init', function(event) {
+  			if (event.target.matches('#expmatrix')) {
+    		//Set Up Content
+   			// Value AND Setting Selection
+			
+ 			var value = "";
+ 			var setting = "";
+  			// forming the queryString
+        	var data            = 'setting='+ setting +'&value=' + value;
+         
+        	// ajax call
+            $.ajax({
+                type: "POST",
+                url: "http://www.arakura.school.nz/pb4l/db/vs.php",
+                data: data,
+                beforeSend: function(html) { // this happens before actual call
+                    $("#results").html(''); 
+                    $("#searchresults").show();
+                    //$(".value").html(value);
+               },
+               success: function(html){ // this happens after we get results
+                    $("#results").show();
+                    $("#results").append(html);
+              }
+            });    
+        
+        	return false;
+
+
+  			}
+		}, false);
+		</script>
+  	   
+  	   
+  	   <div id="searchresults"></div>
+		<ul id="results" class="update">
+	   </ul>
+  	   
+  	   
+  </ons-page>
+</template>
+
+<template id="about.html">
+  <ons-page>
+    <img src="img/logo.png" class="align-center" width="100%" alt="MANA" />
+    <div class="page-content">
+    <h1>About</h1>
+    <p>This app has been developed to assist teachers with accessing the Expectation Matrix for Arakura School PB4L-SW.</p>
+    <p>Our Values are:</p>
+    <ul>
+    	<li><strong>M</strong>ake Positive Choices</li>
+    	<li><strong>A</strong>ct with Respect</li>
+    	<li><strong>N</strong>ever Give-Up Attitude</li>
+    	<li><strong>A</strong>lways show Empathy</li>
+    </ul>
+    <p>In 2017, Arakura School embarked on our PB4L journey. The framework is lead by teachers in the school, and supported by the Principal and the Board of Trustees. By strengthening relationships and creating more positive home and school environments we remove barriers to engagement and improve students’ chances to achieve at school and beyond.</p> 
+    <p>PB4L is a long-term, systemic approach involving ten initiatives. These include whole-school change initiatives, targeted group programmes, and individual student support services. Five of the initiatives are in development.</p>
+    <br />
+    <ons-button onclick="inAppBrowser('http://arakura.school.nz/tikanga/pb4l/'); return false;" modifier="large--quiet">School PB4L Page</ons-button><br />
+	<ons-button onclick="inAppBrowser('http://www.arakura.school.nz'); return false;" modifier="large--quiet">Arakura School Website</ons-button><br />
+	<br />
+	<ons-button onclick="inAppBrowser('http://pb4l.tki.org.nz/'); return false;" modifier="large--quiet">PB4L TKI Website</ons-button>
+    </div> 
+  </ons-page>
+</template>
+    	
+        
+        
+        
+   </ons-page>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+    <script src="https://unpkg.com/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    
+</body>
+
+</html>
